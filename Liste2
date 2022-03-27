@@ -1,0 +1,29 @@
+||analyticsengine.s3.amazonaws.com
+||affiliationjs.s3.amazonaws.com
+||advertising-api-eu.amazon.com
+
+||an.facebook.com
+
+||advertising.twitter.com
+
+||widgets.pinterest.com
+
+||d.reddit.com
+
+||app.getsentry.com
+
+app.raindrop.io##.upgrade-R9fx
+
+www.youtube.com##.grid-disabled.ytd-browse.style-scope > .ytd-two-column-browse-results-renderer.style-scope
+www.youtube.com##ytd-mini-guide-entry-renderer.ytd-mini-guide-renderer.style-scope:nth-of-type(2)
+
+s.to##.plyr__poster
+s.to###wrapper > div.ssto-share-buttons
+
+voe.sx##.plyr__poster
+voe.sx###wrapper > div.ssto-share-buttons
+
+hanime.tv##.community_uploads.flex.column.align-center
+a.adtng.com##.community_uploads.flex.column.align-center
+hanime.tv##.landing__content > div:nth-of-type(1) > .lazy.htv-carousel-container.mb-5
+a.adtng.com##.landing__content > div:nth-of-type(1) > .lazy.htv-carousel-container.mb-5
