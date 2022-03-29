@@ -29,3 +29,7 @@ hanime.tv##.community_uploads.flex.column.align-center
 a.adtng.com##.community_uploads.flex.column.align-center
 hanime.tv##.landing__content > div:nth-of-type(1) > .lazy.htv-carousel-container.mb-5
 a.adtng.com##.landing__content > div:nth-of-type(1) > .lazy.htv-carousel-container.mb-5
+
+m.youtube.com##ytm-item-section-renderer.scwnr-content:nth-of-type(3) > lazy-list
+m.youtube.com##ytm-comments-entry-point-header-renderer
+m.youtube.com##.rich-grid-renderer-contents
