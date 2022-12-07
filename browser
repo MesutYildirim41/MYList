@@ -1,0 +1,16 @@
+www.mozilla.org##.download-link.mzp-c-button.mzp-t-product.mzp-t-secondary.mzp-t-md
+www.mozilla.org##.download-link.mzp-c-button.mzp-t-product.mzp-t-xl
+www.mozilla.org##.mzp-c-sticky-promo.mzp-t-product-firefox.mzp-t-dark.hide-from-legacy-ie.mzp-a-slide-in.is-displayed
+
+vivaldi.com##.btn-primary.dl-button.dl-button-simple
+vivaldi.com##.herotext > .btn-primary.dl-button
+vivaldi.com###now > .center > .btn-primary.dl-button
+vivaldi.com###dl-desktop > .column.w55.w55-tablet.w100-mobile > div:nth-of-type(1) > .center-v > div:nth-of-type(1)
+
+www.opera.com##.header__download > .download-button--wrapper.download-button--desktop.download-button--full > .button.os-mac
+www.opera.com##.text-align--center.pt1.mb4 > .download-button--wrapper.download-button--desktop.download-button--full > .button.os-mac
+www.opera.com##.container-fluid.wrapper.hero-bottom__main-content > div.row:nth-of-type(2) > .col-xs-12.center-lg > .download-button--wrapper.download-button--desktop.download-button--full > .button.os-mac
+
+www.google.com###js-download-hero
+www.google.com###js-download-header
+www.google.com###js-download-now
