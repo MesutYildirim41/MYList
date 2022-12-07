@@ -18,3 +18,7 @@ www.google.com###js-download-now
 www.microsoft.com##.two-ctas > a.c-glyph.c-call-to-action:nth-of-type(1)
 www.microsoft.com###mobile\  > .content-placement-4up
 www.microsoft.com##.custom-module > .body-copy > div > .edge-dl-embed > .download-button-mwf > .download-button-mwf__button-group.button.dl-button-group
+
+www.waterfox.net##.download-mac.btn-download.btn
+www.waterfox.net##.endcta-btns > .hero-ctas > .btn-download.btn
+www.waterfox.net##div.gOZZJG.ProjectCard__Card-sc-19xue7n-0:nth-of-type(3)
