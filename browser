@@ -14,3 +14,7 @@ www.opera.com##.container-fluid.wrapper.hero-bottom__main-content > div.row:nth-
 www.google.com###js-download-hero
 www.google.com###js-download-header
 www.google.com###js-download-now
+
+www.microsoft.com##.two-ctas > a.c-glyph.c-call-to-action:nth-of-type(1)
+www.microsoft.com###mobile\  > .content-placement-4up
+www.microsoft.com##.custom-module > .body-copy > div > .edge-dl-embed > .download-button-mwf > .download-button-mwf__button-group.button.dl-button-group
