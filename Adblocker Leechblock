@@ -4,35 +4,35 @@
 !------------------------------
 
 !09.01.2025 Suchmaschiene
-yandex.com##body
-yandex.eu##body
-ya.ru##body
-search.brave.com##body
-qwant.com##body
+!yandex.com##body
+!yandex.eu##body
+!ya.ru##body
+!search.brave.com##body
+!qwant.com##body
 
 
 !------------------------------
 
 ! 08.01.2025 Unterhaltung Zeitfenster 
-!s.to##body
-!aniworld.to##body
+s.to##body
+aniworld.to##body
 
 !------------------------------
 
 ! 08.01.2025 Nachrichten Zeitfenster 
-!bild.de##body
-!bloomberght.com##body
-!bz-berlin.de##body
-!ensonhaber.com##body
-!haberler.com##body
-!haberturk.com##body
-!m.bloomberght.com##body
-!m.haberturk.com##body
-!rtde.me##body
-!sondakika.com##body
-!t24.com.tr##body
-!tagesschau.de##body
-!spiegel.de##body
+bild.de##body
+bloomberght.com##body
+bz-berlin.de##body
+ensonhaber.com##body
+haberler.com##body
+haberturk.com##body
+m.bloomberght.com##body
+m.haberturk.com##body
+rtde.me##body
+sondakika.com##body
+t24.com.tr##body
+tagesschau.de##body
+spiegel.de##body
 
 !------------------------------
 
@@ -43,12 +43,12 @@ qwant.com##body
 !invidious.nerdvpn.de##body
 !api.invidious.io##body
 !docs.invidious.io##body
-!m.youtube.com##body
-!youtube.com##body
-!x.com##body
-!tumblr.com##body
-!instagram.com##body
-!tiktok.com##body
+m.youtube.com##body
+youtube.com##body
+x.com##body
+tumblr.com##body
+instagram.com##body
+tiktok.com##body
 
 !------------------------------
 
