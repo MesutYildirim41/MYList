@@ -6,9 +6,9 @@
 !invidious.nerdvpn.de##body
 !api.invidious.io##body
 !docs.invidious.io##body
+!m.youtube.com##body
+!youtube.com##body
 ---
-m.youtube.com##body
-youtube.com##body
 x.com##body
 tumblr.com##body
 instagram.com##body
