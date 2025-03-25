@@ -7,3 +7,8 @@ www.youtube.com##ytd-mini-guide-entry-renderer.ytd-mini-guide-renderer.style-sco
 www.youtube.com##ytd-rich-section-renderer.ytd-rich-grid-renderer.style-scope:nth-of-type(2)
 www.youtube.com##.grid-disabled.grid.ytd-browse.style-scope > .ytd-two-column-browse-results-renderer.style-scope
 www.youtube.com##.ytd-mini-guide-entry-renderer.style-scope.yt-simple-endpoint
+
+! yandex.com/ya.ru
+
+yandex.com##.wYy4m7IFUXOk
+ya.ru##.serp-controller_js_inited.serp-controller_page_search.navigation-controller_js_inited.i-bem.navigation-controller.serp-controller_small-top-padding.serp-controller_viewer-history.serp-controller_viewer.serp-controller_vertical-shadowed.serp-controller_grid-counter.serp-controller_complain_yes.serp-controller_navigation_yes.serp-controller_infinite_yes.serp-controller.page-layout_reactapp.page-layout_layout_serp.page-layout_page_search.page-layout
