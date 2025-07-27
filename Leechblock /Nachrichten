@@ -5,7 +5,7 @@
 www.haberturk.com##body
 www.bild.de##body
 www.bz-berlin.de##body
-www.bloomberght.com##body
+!www.bloomberght.com##body
 rtde.me##body
 t24.com.tr##body
 www.ensonhaber.com##body
@@ -30,5 +30,5 @@ www.sondakika.com##body
 !www.tagesschau.de##body
 !www.sueddeutsche.de##body
 m.haberturk.com##body
-m.bloomberght.com##body
+!m.bloomberght.com##body
 m.bild.de##body
