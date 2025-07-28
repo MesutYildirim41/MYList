@@ -1,3 +1,4 @@
+! Soziale Medien
 m.youtube.com##body
 youtube.com##body
 invidious.io##body
@@ -6,14 +7,15 @@ invidious.nerdvpn.de##body
 yewtu.be##body
 inv.nadeko.net##body
 docs.invidious.io##body
-s.to##body
-hdfilme.my##body
-www.ddizi.im##body
---------------------------
 !x.com##body
 !tumblr.com##body
 !instagram.com##body
 !tiktok.com##body
+-------------------------
+! Streaming
+s.to##body
+hdfilme.my##body
+www.ddizi.im##body
 !www.canlidizi10.net##body
 !dizifun3.com##body
 !jetfilmizle.io##body
@@ -25,3 +27,29 @@ www.ddizi.im##body
 !hdfilmcehennemi.city##body
 !hdfilmcehennemi14.org##body
 !dizipal959.com##body
+---------------------------
+! Nachrichten
+!www.morgenpost.de##body
+!www.faz.net##body
+!taz.de##body
+!www.berliner-zeitung.de##body
+!www.bloomberght.com##body
+!www.spiegel.de##body
+!www.sozcu.com.tr##body
+!www.hurriyet.com.tr##body
+!www.milliyet.com.tr##body
+!www.aksam.com.tr##body
+!www.sabah.com.tr##body
+!www.turkiyegazetesi.com.tr##body
+!www.cumhuriyet.com.tr##body
+!www.posta.com.tr##body
+!www.dunya.com##body
+!www.focus.de##body
+!www.zeit.de##body
+!www.tagesspiegel.de##body
+!www.fr.de##body
+!www.rnd.de##body
+!www.sueddeutsche.de##body
+!www.tagesschau.de##body
+!www.sueddeutsche.de##body
+!m.bloomberght.com##body
