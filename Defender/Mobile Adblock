@@ -1,23 +1,6 @@
---------------------
-m.youtube.com##body
-youtube.com##body
-invidious.io##body
-invidious.f5.si##body
-invidious.nerdvpn.de##body
-yewtu.be##body
-inv.nadeko.net##body
-docs.invidious.io##body
-s.to##body
-hdfilme.my##body
-www.ddizi.im##body
-www.canlidizi10.net##body
-dizifun3.com##body
-jetfilmizle.io##body
-hdfilmcehennemi02.com##body
-hdfilmcehennemi15.com##body
-dizipal1025.com##body
-dizibay.net##body
-setfilmizle.n##body
-hdfilmcehennemi.city##body
-hdfilmcehennemi14.org##body
-dizipal959.com##body
+m.youtube.com##.full-logo.mobile-topbar-logo
+m.youtube.com##.rich-grid-sticky-header.rich-grid-renderer-header
+m.youtube.com##ytm-pivot-bar-item-renderer:nth-of-type(2)
+m.youtube.com##.full-bleed-wn-thumbs.watch-content > .single-column-watch-next-modern-panels.scwnr-content > lazy-list
+m.youtube.com##.rich-grid-renderer-contents
+m.youtube.com###home-icon > .ytSpecIconShapeHost.yt-icon-shape
