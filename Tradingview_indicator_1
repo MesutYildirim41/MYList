@@ -1,0 +1,247 @@
+//@version=5
+indicator("Order Blocks + Order-Flow Proxies", overlay=true, max_boxes_count=200, max_labels_count=200)
+
+//=============================
+// Inputs
+//=============================
+groupStruct  = "Structure & OB"
+swingLen     = input.int(3,   "Swing length (BOS lookback)", minval=2, group=groupStruct)
+atrLen       = input.int(14,  "ATR length", group=groupStruct)
+displATR     = input.float(1.0, "Min displacement (ATR ×)", step=0.25, group=groupStruct)
+useBodyRef   = input.bool(true, "Use candle body for OB zone (else full wick)", group=groupStruct)
+useWickInvalidate = input.bool(false, "Invalidate on wick break (else close)", group=groupStruct)
+lifespanBars = input.int(500, "OB lifespan (bars, 0 = infinite)", minval=0, group=groupStruct)
+showLabels   = input.bool(true, "Show touch/confirm labels", group=groupStruct)
+maxKeep      = input.int(150, "Max OBs to keep per side (older pruned)", minval=50, group=groupStruct)
+
+groupFlow    = "Order-Flow Proxies"
+flowLen      = input.int(21,  "EMA length (delta, imbalance)", minval=1, group=groupFlow)
+zLen         = input.int(50,  "Z-score lookback (Effort vs Result)", minval=20, group=groupFlow)
+longConfThr  = input.float(+0.10, "Imbalance ≥ for Long confirm", step=0.01, group=groupFlow)
+shortConfThr = input.float(-0.10, "Imbalance ≤ for Short confirm", step=0.01, group=groupFlow)
+deltaMode    = input.string("Close-vs-PrevClose", "Delta proxy", options=["Close-vs-PrevClose","Body"], group=groupFlow)
+
+groupHTF     = "Context Filter (optional)"
+useHTF       = input.bool(false, "Gate with HTF EMA slope", group=groupHTF)
+htfTF        = input.timeframe("60", "HTF timeframe", group=groupHTF)
+htfLen       = input.int(50, "HTF EMA length", minval=5, group=groupHTF)
+
+groupSty     = "Style"
+bullCol      = input.color(color.new(color.teal, 70), "Bull OB fill", group=groupSty)
+bearCol      = input.color(color.new(color.red,  75), "Bear OB fill", group=groupSty)
+lineCol      = input.color(color.new(color.gray, 0), "OB border", group=groupSty)
+
+groupAlerts  = "Alerts"
+enableAlertCalls = input.bool(false, "Use inline alert() calls (optional)", group=groupAlerts,
+     tooltip="If ON, the script will call alert() when conditions are met. You can also create standard alerts from the alertcondition rules without turning this on.")
+alertsOnBarClose = input.bool(true, "Only alert after bar closes", group=groupAlerts,
+     tooltip="Prevents intrabar spam; alert signals will be gated by barstate.isconfirmed.")
+
+//=============================
+// Helpers
+//=============================
+atr = ta.atr(atrLen)
+isBullBOS = close > ta.highest(high, swingLen)[1] and (close - open) > displATR * atr
+isBearBOS = close < ta.lowest(low,  swingLen)[1] and (open  - close) > displATR * atr
+
+// Return bounds of reference candle (body or wick)
+getBounds(idx, useBody) =>
+    float lo = na
+    float hi = na
+    if not na(idx)
+        srcOpen  = open[idx]
+        srcClose = close[idx]
+        srcHigh  = high[idx]
+        srcLow   = low[idx]
+        if useBody
+            lo := math.min(srcOpen, srcClose)
+            hi := math.max(srcOpen, srcClose)
+        else
+            lo := srcLow
+            hi := srcHigh
+    [lo, hi]
+
+// Find the most recent opposite-colored candle within a lookback window
+getLastOppBody(isBull, maxLookback) =>
+    int dist = na
+    for i = 1 to maxLookback
+        cond = isBull ? (close[i] < open[i]) : (close[i] > open[i])
+        if cond
+            dist := i
+            break
+    dist
+
+// OB reference candle indexes (on BOS bars) using a constrained window
+window = swingLen * 3
+obIdxBull = isBullBOS ? getLastOppBody(true,  window) : na
+obIdxBear = isBearBOS ? getLastOppBody(false, window) : na
+
+//=============================
+// Order-Flow Proxies
+//=============================
+// Tick-direction bar delta proxies (two variants)
+deltaRaw  = deltaMode == "Body" ? volume * math.sign(close - open): volume * math.sign(nz(close - close[1]))
+deltaEma  = ta.ema(deltaRaw, flowLen)
+cvd       = ta.cum(nz(deltaRaw))
+
+// Imbalance ratio: delta ÷ volume (bounded [-1, 1] in theory)
+imbRaw = volume > 0 ? deltaRaw / volume : 0.0
+imbEma = ta.ema(imbRaw, flowLen)
+
+// Effort vs Result (EvR): volume vs true-range return (with warmup guards)
+haveZ = bar_index >= zLen
+volZ  = haveZ ? (volume - ta.sma(volume, zLen)) / math.max(ta.stdev(volume, zLen), 1e-10) : 0.0
+retTR = (close - open) / math.max(ta.tr(true), 1e-10)
+evr   = retTR * volZ
+
+//=============================
+// OB storage (arrays of boxes & metadata)
+//=============================
+var box[]    bullBoxes = array.new_box()
+var box[]    bearBoxes = array.new_box()
+var int[]    bullBirth = array.new_int()
+var int[]    bearBirth = array.new_int()
+var float[]  bullLoA   = array.new_float()
+var float[]  bullHiA   = array.new_float()
+var float[]  bearLoA   = array.new_float()
+var float[]  bearHiA   = array.new_float()
+
+// Create new OB box
+newBox(lo, hi, isBull) =>
+    b = box.new(bar_index, lo, bar_index, hi, border_color=lineCol, bgcolor=isBull ? bullCol : bearCol)
+    b
+
+// Record OBs
+if isBullBOS and not na(obIdxBull)
+    [loB, hiB] = getBounds(obIdxBull, useBodyRef)
+    if not na(loB) and not na(hiB)
+        bx = newBox(loB, hiB, true)
+        array.push(bullBoxes, bx)
+        array.push(bullBirth,  bar_index)
+        array.push(bullLoA, loB)
+        array.push(bullHiA, hiB)
+
+if isBearBOS and not na(obIdxBear)
+    [loS, hiS] = getBounds(obIdxBear, useBodyRef)
+    if not na(loS) and not na(hiS)
+        bx = newBox(loS, hiS, false)
+        array.push(bearBoxes, bx)
+        array.push(bearBirth,  bar_index)
+        array.push(bearLoA, loS)
+        array.push(bearHiA, hiS)
+
+// Prune oldest to cap memory
+pruneOldest(_boxes, _birth, _los, _his, cap) =>
+    while array.size(_boxes) > cap
+        old = array.shift(_boxes)
+        box.delete(old)
+        array.shift(_birth), array.shift(_los), array.shift(_his)
+
+pruneOldest(bullBoxes, bullBirth, bullLoA, bullHiA, maxKeep)
+pruneOldest(bearBoxes, bearBirth, bearLoA, bearHiA, maxKeep)
+
+//=============================
+// Maintain, extend, and invalidate OBs
+//=============================
+invalidateAndMaintain(isBull) =>
+    boxes   = isBull ? bullBoxes : bearBoxes
+    births  = isBull ? bullBirth : bearBirth
+    losArr  = isBull ? bullLoA   : bearLoA
+    hisArr  = isBull ? bullHiA   : bearHiA
+    sz = array.size(boxes)
+    if sz > 0
+        for i = sz - 1 to 0
+            bx   = array.get(boxes, i)
+            born = array.get(births, i)
+            loA  = array.get(losArr, i)
+            hiA  = array.get(hisArr, i)
+
+            // Extend right edge to current bar
+            box.set_right(bx, bar_index)
+
+            // Invalidation: choose wick vs close
+            invalid = isBull ? (useWickInvalidate ? low < loA  : close < loA)
+                             : (useWickInvalidate ? high > hiA : close > hiA)
+
+            // Lifespan expiry
+            expired = lifespanBars > 0 ? (bar_index - born > lifespanBars) : false
+
+            if invalid or expired
+                box.delete(bx)
+                array.remove(boxes, i)
+                array.remove(births, i)
+                array.remove(losArr, i)
+                array.remove(hisArr, i)
+
+invalidateAndMaintain(true)
+invalidateAndMaintain(false)
+
+//=============================
+// Touch detection — choose most proximal zone
+//=============================
+touchAny(isBull) =>
+    boxes  = isBull ? bullBoxes : bearBoxes
+    losArr = isBull ? bullLoA   : bearLoA
+    hisArr = isBull ? bullHiA   : bearHiA
+    bool touched = false
+    float tLo = na
+    float tHi = na
+    float bestMidDist = na
+    sz = array.size(boxes)
+    if sz > 0
+        for i = sz - 1 to 0
+            loA = array.get(losArr, i)
+            hiA = array.get(hisArr, i)
+            // If current bar overlaps the zone
+            if high >= loA and low <= hiA
+                mid   = (loA + hiA) * 0.5
+                dist  = math.abs(close - mid)
+                if na(bestMidDist) or dist < bestMidDist
+                    bestMidDist := dist
+                    tLo := loA
+                    tHi := hiA
+                    touched := true
+    [touched, tLo, tHi]
+
+[touchBull, bullLo, bullHi] = touchAny(true)
+[touchBear, bearLo, bearHi] = touchAny(false)
+
+//=============================
+// Confirmation logic from proxies + optional HTF gate
+//=============================
+bullConfirmRaw = (imbEma >= longConfThr and deltaEma > 0 and evr > 0)
+bearConfirmRaw = (imbEma <= shortConfThr and deltaEma < 0 and evr < 0)
+
+// === HTF context (always compute; only use if useHTF is true)
+htfEma     = request.security(syminfo.tickerid, htfTF, ta.ema(close, htfLen), barmerge.gaps_off, barmerge.lookahead_off)
+htfEmaPrev = request.security(syminfo.tickerid, htfTF, ta.ema(close, htfLen), barmerge.gaps_off, barmerge.lookahead_off)[1]
+htfUp      = htfEma > htfEmaPrev
+htfDown    = htfEma < htfEmaPrev
+
+// Gate confirm
+gateOk       = alertsOnBarClose ? barstate.isconfirmed : true
+bullConfirm  = bullConfirmRaw and (useHTF ? htfUp   : true) and gateOk
+bearConfirm  = bearConfirmRaw and (useHTF ? htfDown : true) and gateOk
+
+
+//=============================
+// De-dup: avoid multiple labels/alerts on same bar
+//=============================
+var int lastBullBar = na
+var int lastBearBar = na
+
+bullTouchConfirmed = touchBull and bullConfirm and (na(lastBullBar) or lastBullBar != bar_index)
+bearTouchConfirmed = touchBear and bearConfirm and (na(lastBearBar) or lastBearBar != bar_index)
+
+//=============================
+// Labels (triangles instead of text)
+//=============================
+if showLabels and bullTouchConfirmed
+    label.new(bar_index, bullHi, "", style=label.style_triangleup, color=color.new(color.teal, 0), textcolor=color.white, size=size.tiny)
+    lastBullBar := bar_index
+
+if showLabels and bearTouchConfirmed
+    label.new(bar_index, bearLo, "", style=label.style_triangledown, color=color.new(color.red, 0), textcolor=color.white, size=size.tiny)
+    lastBearBar := bar_index
+
+//update chart
